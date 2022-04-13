@@ -1,0 +1,43 @@
+{
+  "name": "recipe-resizer",
+  "version": "1.0.0",
+  "description": "scale recipe ingredients easily",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerremy777/recipe-resizer.git"
+  },
+  "keywords": [
+    "recipe",
+    "scale",
+    "re-scale"
+  ],
+  "author": "Jerremy Stroman",
+  "license": "MIT",
+  "homepage": "https://github.com/jerremy777/recipe-resizer#readme",
+  "scripts": {
+    "clean": "rm dist/bundle.js",
+    "build-dev": "webpack --mode development",
+    "build-prod": "webpack --mode production",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "@babel/preset-react": "^7.16.7",
+    "babel-loader": "^8.2.4",
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "css-loader": "^6.7.1",
+    "style-loader": "^3.3.1",
+    "eslint": "^8.13.0",
+    "eslint-plugin-react": "^7.29.4",
+    "jest": "^27.5.1",
+    "babel-jest": "^27.5.1",
+    "url-loader": "^4.1.1",
+    "file-loader": "^6.2.0"
+  }
+}
