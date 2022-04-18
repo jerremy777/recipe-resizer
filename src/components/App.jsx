@@ -10,9 +10,29 @@ function App(props) {
     setIngredients((previous) => {
       return {...previous, [e.target.id]: e.target.value};
     });
+    setScaledIngredients((previous) => {
+      return {...previous, [e.target.id]: e.target.value};
+    });
   };
 
   const handleRecipeScale = (e) => {
+    // Math is (new/old) * old
+    // check which scaledIngredient is different from original
+    // use that ingredient as the new
+    const original = Object.values(ingredients);
+    const scaled = Object.values(scaledIngredients);
+
+    for (var i = 0; i < original.length; i += 1) {
+      if (scaled[i] !== original[i]) {
+        factor = scaled[i] / original[i];
+      }
+    }
+
+    let newScaledIngredients = {};
+    for (var ing in scaledIngredients) {
+      newScaledIngredients[ing] = scaledIngredients[ing] * factor;
+    }
+
 
   }
 
@@ -30,13 +50,15 @@ function App(props) {
       <br></br>
 
       <label htmlFor="scaled-ingredient-1">Scaled:</label>
-      <input type="text" id="scaled-ingredient-1" placeholder={ingredients['ingredient-1']} />
+      <input type="text" id="scaled-ingredient-1" placeholder={scaledIngredients['ingredient-1']} />
 
       <label htmlFor="scaled-ingredient-2">Scaled:</label>
-      <input type="text" id="scaled-ingredient-2" placeholder={ingredients['ingredient-2']} />
+      <input type="text" id="scaled-ingredient-2" placeholder={scaledIngredients['ingredient-2']} />
 
       <label htmlFor="scaled-ingredient-3">Scaled:</label>
-      <input type="text" id="scaled-ingredient-3" placeholder={ingredients['ingredient-3']} />
+      <input type="text" id="scaled-ingredient-3" placeholder={scaledIngredients['ingredient-3']} />
+
+      <button type="button" onClick={ () => handleRecipeScale() }>Scale</button>
     </div>
   );
 };
