@@ -8,12 +8,18 @@ function App(props) {
 
   const handleRecipeChange = (e) => {
     setIngredients((previous) => {
-      return {...previous, [e.target.id]: e.target.value};
+      return {...previous, [e.target.id]: e.target.value * 1};
     });
     setScaledIngredients((previous) => {
-      return {...previous, [e.target.id]: e.target.value};
+      return {...previous, [e.target.id]: e.target.value * 1};
     });
   };
+
+  const handleScaleChange = (e) => {
+    setScaledIngredients((previous) => {
+      return {...previous, [e.target.name]: e.target.value * 1};
+    });
+  }
 
   const handleRecipeScale = (e) => {
     // Math is (new/old) * old
@@ -22,9 +28,12 @@ function App(props) {
     const original = Object.values(ingredients);
     const scaled = Object.values(scaledIngredients);
 
+    console.log(original, scaled);
+
     for (var i = 0; i < original.length; i += 1) {
       if (scaled[i] !== original[i]) {
-        factor = scaled[i] / original[i];
+        console.log(scaled[i])
+        setFactor(scaled[i] / original[i]);
       }
     }
 
@@ -33,7 +42,7 @@ function App(props) {
       newScaledIngredients[ing] = scaledIngredients[ing] * factor;
     }
 
-
+    setScaledIngredients(newScaledIngredients);
   }
 
   return (
@@ -50,7 +59,10 @@ function App(props) {
       <br></br>
 
       <label htmlFor="scaled-ingredient-1">Scaled:</label>
-      <input type="text" id="scaled-ingredient-1" placeholder={scaledIngredients['ingredient-1']} />
+      <input type="text" id="scaled-ingredient-1"
+        name="ingredient-1"
+        placeholder={scaledIngredients['ingredient-1']}
+        onChange={ e => handleScaleChange(e) } />
 
       <label htmlFor="scaled-ingredient-2">Scaled:</label>
       <input type="text" id="scaled-ingredient-2" placeholder={scaledIngredients['ingredient-2']} />
