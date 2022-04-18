@@ -1,17 +1,13 @@
 
 import React from "react";
 
-class App extends React.Component {
-  render() {
-    const { name } = this.props;
-    return (
-      <>
-        <h1>
-          Hello {name}
-        </h1>
-      </>
-    );
-  }
-}
+function App(props) {
+  return (
+    <div>
+      <label htmlFor="ingredient-1">Ingredient:</label>
+      <input type="text" id="ingredient-1" />
+    </div>
+  );
+};
 
 export default App;
