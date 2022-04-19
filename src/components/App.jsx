@@ -4,21 +4,21 @@ import React from "react";
 function App(props) {
   const [factor, setFactor] = React.useState(1);
   const [recipeLength, setRecipeLength] = React.useState(3);
+  // Want to define a length so that we can iterate over it later:
   const [ingredients, setIngredients] = React.useState([...Array(recipeLength)]);
+  const [scaledIngredients, setScaledIngredients] = React.useState([...Array(recipeLength)]);
 
   const handleRecipeChange = (e) => {
-    console.log(e);
-    setIngredients((previous) => {
-      return {...previous, [e.target.key]: e.target.value * 1};
-    });
-    setScaledIngredients((previous) => {
-      return {...previous, [e.target.id]: e.target.value * 1};
-    });
+    let list = ingredients;
+    list[e.target.id] = Number(e.target.value);
+    console.log('ingredients:', ingredients);
+    setIngredients(list);
+    setScaledIngredients(list);
   };
 
   const handleScaleChange = (e) => {
     setScaledIngredients((previous) => {
-      return {...previous, [e.target.name]: e.target.value * 1};
+      return {...previous, [e.target.id]: e.target.value * 1};
     });
   }
 
@@ -29,21 +29,24 @@ function App(props) {
     </li>
   );
 
+  const handleButtonClick = (e) => {
+    let newFactor = factor * e.target.value;
+    setFactor(newFactor);
+    setScaledIngredients((previousIngredients) => {
+      return previousIngredients.map(e => e * newFactor);
+    });
+  }
+
+
   return (
     <div>
       <ul>
-        <li key={0}>
-          <label htmlFor={0}>Ingredient:</label>
-          <input type="text" id={0} onChange={ e => handleRecipeChange(e) } />
-        </li>
-        <li key={1}>
-          <label htmlFor={1}>Ingredient:</label>
-          <input type="text" id={1} onChange={ e => handleRecipeChange(e) }  />
-        </li>
-        <li key={2}>
-          <label htmlFor={2}>Ingredient:</label>
-          <input type="text" id={2} onChange={ e => handleRecipeChange(e) }  />
-        </li>
+        {ingredients.map((e, i) => (ingredientElement(i)))}
+      </ul>
+      <button type="button" value={0.5} onClick={ e => handleButtonClick(e) }>-</button>
+      <button type="button" value={2} onClick={ e => handleButtonClick(e) }>+</button>
+      <ul>
+        {scaledIngredients.map((e, i) => (<li key={i}>{e}</li>))}
       </ul>
     </div>
   );
