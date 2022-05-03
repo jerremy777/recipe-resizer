@@ -1,5 +1,4 @@
-
-import React from "react";
+import React from 'react';
 
 function App(props) {
   const [factor, setFactor] = React.useState(1);
@@ -9,7 +8,7 @@ function App(props) {
   const [scaledIngredients, setScaledIngredients] = React.useState([...Array(recipeLength)]);
 
   const handleRecipeChange = (e) => {
-    let list = ingredients;
+    const list = ingredients;
     list[e.target.id] = Number(e.target.value);
     console.log('ingredients:', ingredients);
     setIngredients(list);
@@ -17,39 +16,67 @@ function App(props) {
   };
 
   const handleScaleChange = (e) => {
-    setScaledIngredients((previous) => {
-      return {...previous, [e.target.id]: e.target.value * 1};
-    });
-  }
+    setScaledIngredients((previous) => ({ ...previous, [e.target.id]: e.target.value * 1 }));
+  };
 
   const ingredientElement = (index) => (
     <li key={index}>
       <label htmlFor={index}>Ingredient:</label>
-      <input type="text" id={index} onChange={ e => handleRecipeChange(e) } />
+      <input type="text" id={index} onChange={(e) => handleRecipeChange(e)} />
     </li>
   );
 
   const handleButtonClick = (e) => {
-    let newFactor = factor * e.target.value;
+    const newFactor = factor * e.target.value;
     setFactor(newFactor);
-    setScaledIngredients((previousIngredients) => {
-      return previousIngredients.map(e => e * newFactor);
-    });
-  }
-
+    setScaledIngredients((previousIngredients) => previousIngredients.map((e) => e * newFactor));
+  };
 
   return (
-    <div>
-      <ul>
-        {ingredients.map((e, i) => (ingredientElement(i)))}
-      </ul>
-      <button type="button" value={0.5} onClick={ e => handleButtonClick(e) }>-</button>
-      <button type="button" value={2} onClick={ e => handleButtonClick(e) }>+</button>
-      <ul>
-        {scaledIngredients.map((e, i) => (<li key={i}>{e}</li>))}
-      </ul>
+    <div id="main-app">
+      <div id="directions">
+        <div className="header directions-header">
+          <h2>directions</h2>
+        </div>
+        <div className="content directions-content">
+          <textarea id="directions-text" />
+        </div>
+      </div>
+      <div id="recipe">
+
+        <div id="ingredient-header" className="ingredient">
+          <h2>ingredients</h2>
+        </div>
+        <div id="amount-header" className="amount">
+          <h2>amounts</h2>
+        </div>
+
+        <input type="text" name="ingredient-1" className="recipe-item ingredient-item" />
+        <input type="text" name="amount-1" className="recipe-item amount-item" />
+        <input type="text" name="unit-1" className="recipe-item unit-item" />
+
+      </div>
+      <div id="resizer">
+        <div className="header resizer-header">
+          <h2>resizer</h2>
+        </div>
+        <div className="content resizer-content">
+          <button type="button" id="reset-button">
+            reset
+          </button>
+          <button type="button" id="reset-button">
+            save
+          </button>
+          <button type="button" id="reset-button">
+            load
+          </button>
+          <button type="button" id="reset-button">
+            share
+          </button>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default App;
