@@ -5,7 +5,7 @@ const path = require('path');
 const config = {
   entry: './src/index.jsx',
   mode: 'development',
-  resole: { extensions: ['*', '.js', '.jsx'] },
+  resolve: { extensions: ['*', '.js', '.jsx'] },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',

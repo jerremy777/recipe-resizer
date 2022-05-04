@@ -1,4 +1,6 @@
 import React from 'react';
+import Recipe from './Recipe';
+import Resizer from './Resizer';
 
 function App(props) {
   const [factor, setFactor] = React.useState(1);
@@ -34,11 +36,9 @@ function App(props) {
 
   return (
     <div id="main-app">
-
       <div id="directions-headers" className="header">
         <h2>directions</h2>
       </div>
-
       <div id="recipe-headers">
         <div id="ingredient-header" className="header">
           <h2>ingredients</h2>
@@ -47,57 +47,17 @@ function App(props) {
           <h2>amounts</h2>
         </div>
       </div>
-
       <div id="resizer-headers" className="header">
         <h2>resizer</h2>
       </div>
 
-      <div id="directions-content">
+      <div id="directions-content" className="content">
         <div className="content directions-content">
           <textarea id="directions-text" />
         </div>
       </div>
-
-      <div id="recipe-content">
-        <div className="recipe-item ingredient">
-          <input type="text" name="ingredient-1" className="recipe-item ingredient-input" />
-        </div>
-        <div className="recipe-item amount">
-          <input type="text" name="amount-1" className="recipe-item amount-input" />
-        </div>
-        <div className="recipe-item unit">
-          <input type="text" name="unit-1" list="unit" className="recipe-item unit-input" />
-          <datalist id="unit">
-            <option value="grams" defaultValue>grams</option>
-            <option value="cups">cups</option>
-            <option value="tbsp">tbsp</option>
-            <option value="tsp">tsp</option>
-          </datalist>
-        </div>
-      </div>
-
-
-      <div className="content resizer-content">
-        <div className="resizer-controls">
-          <input type="range" id="resizer-input" min="0.1" max="5" />
-        </div>
-        <div className="resizer-options">
-          <button type="button" id="reset-button">
-            reset
-          </button>
-          <button type="button" id="reset-button">
-            save
-          </button>
-          <button type="button" id="reset-button">
-            load
-          </button>
-          <button type="button" id="reset-button">
-            share
-          </button>
-        </div>
-      </div>
-
-
+      <Recipe />
+      <Resizer />
     </div>
   );
 }
