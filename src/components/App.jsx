@@ -140,7 +140,7 @@ function App() {
   };
 
   React.useEffect(() => {
-    const newAmounts = amounts.map((e) => (e ? e * factor : e));
+    const newAmounts = amounts.map((e) => (e ? (e * factor).toFixed(2) : e));
     console.log('New amounts:', newAmounts);
     setAmounts(newAmounts);
   }, [factor]);
