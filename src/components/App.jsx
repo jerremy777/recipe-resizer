@@ -26,19 +26,36 @@ function Resizer() {
   );
 }
 
-function RecipeItem({ num }) {
+function RecipeItem({ num, updateRecipe }) {
   return (
     <div className="recipe-items">
       <span className="recipe-item">
-        <input type="text" name={`ingredient_${num}`} className="recipe-item ingredient-input" />
+        <input
+          type="text"
+          name={`ingredient_${num}`}
+          placeholder="ingredient"
+          className="recipe-item ingredient-input"
+        />
       </span>
       <span className="recipe-item">
-        <input type="text" name={`amount_${num}`} className="recipe-item amount-input" />
+        <input
+          type="number"
+          name={`amount_${num}`}
+          placeholder="amount"
+          className="recipe-item amount-input"
+          onChange={updateRecipe}
+        />
       </span>
       <span className="recipe-item">
-        <input type="text" name={`unit_${num}`} list="unit" className="recipe-item unit-input" />
+        <input
+          type="text"
+          name={`unit_${num}`}
+          list="unit"
+          className="recipe-item unit-input"
+          placeholder="unit"
+        />
         <datalist id="unit">
-          <option value="grams" defaultValue>grams</option>
+          <option value="grams">grams</option>
           <option value="cups">cups</option>
           <option value="tbsp">tbsp</option>
           <option value="tsp">tsp</option>
@@ -48,11 +65,11 @@ function RecipeItem({ num }) {
   );
 }
 
-function Recipe({ factor, length }) {
+function Recipe({ factor, length, updateRecipe }) {
   return (
     <div id="recipe-content" className="content">
       {[...Array(length).keys()].map((e) => (
-        <RecipeItem key={e} num={e + 1} />
+        <RecipeItem key={e} num={e} updateRecipe={updateRecipe} />
       ))}
     </div>
   );
@@ -61,6 +78,13 @@ function Recipe({ factor, length }) {
 function App() {
   const [factor, setFactor] = React.useState(1);
   const [recipeLength, setRecipeLength] = React.useState(5);
+  const [recipe, setRecipe] = React.useState({});
+
+  const updateRecipe = (e) => {
+    const newRecipe = recipe;
+    newRecipe[e.target.name] = e.target.value;
+    setRecipe(newRecipe);
+  };
 
   return (
     <div id="main-app">
@@ -81,7 +105,7 @@ function App() {
       <div id="directions-content" className="content">
         <textarea id="directions-text" />
       </div>
-      <Recipe factor={factor} length={recipeLength} />
+      <Recipe factor={factor} length={recipeLength} updateRecipe={updateRecipe} />
       <Resizer />
     </div>
   );
