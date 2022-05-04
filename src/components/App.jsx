@@ -1,38 +1,66 @@
 import React from 'react';
-import Recipe from './Recipe';
-import Resizer from './Resizer';
+// import Recipe from './Recipe';
+// import Resizer from './Resizer';
 
-function App(props) {
+function Resizer() {
+  return (
+    <div id="resizer-content" className="content">
+      <div id="resizer-controls">
+        <input type="range" id="resizer-input" min="10" max="40" defaultValue={25} />
+      </div>
+      <div id="resizer-options">
+        <button type="button" id="reset-button" className="option-button">
+          reset
+        </button>
+        <button type="button" id="save-button" className="option-button">
+          save
+        </button>
+        <button type="button" id="load-button" className="option-button">
+          load
+        </button>
+        <button type="button" id="share-button" className="option-button">
+          share
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function RecipeItem({ num }) {
+  return (
+    <div className="recipe-items">
+      <span className="recipe-item">
+        <input type="text" name={`ingredient_${num}`} className="recipe-item ingredient-input" />
+      </span>
+      <span className="recipe-item">
+        <input type="text" name={`amount_${num}`} className="recipe-item amount-input" />
+      </span>
+      <span className="recipe-item">
+        <input type="text" name={`unit_${num}`} list="unit" className="recipe-item unit-input" />
+        <datalist id="unit">
+          <option value="grams" defaultValue>grams</option>
+          <option value="cups">cups</option>
+          <option value="tbsp">tbsp</option>
+          <option value="tsp">tsp</option>
+        </datalist>
+      </span>
+    </div>
+  );
+}
+
+function Recipe({ factor, length }) {
+  return (
+    <div id="recipe-content" className="content">
+      {[...Array(length).keys()].map((e) => (
+        <RecipeItem key={e} num={e + 1} />
+      ))}
+    </div>
+  );
+}
+
+function App() {
   const [factor, setFactor] = React.useState(1);
-  const [recipeLength, setRecipeLength] = React.useState(3);
-  // Want to define a length so that we can iterate over it later:
-  const [ingredients, setIngredients] = React.useState([...Array(recipeLength)]);
-  const [scaledIngredients, setScaledIngredients] = React.useState([...Array(recipeLength)]);
-
-  // const handleRecipeChange = (e) => {
-  //   const list = ingredients;
-  //   list[e.target.id] = Number(e.target.value);
-  //   console.log('ingredients:', ingredients);
-  //   setIngredients(list);
-  //   setScaledIngredients(list);
-  // };
-
-  // const handleScaleChange = (e) => {
-  //   setScaledIngredients((previous) => ({ ...previous, [e.target.id]: e.target.value * 1 }));
-  // };
-
-  // const ingredientElement = (index) => (
-  //   <li key={index}>
-  //     <label htmlFor={index}>Ingredient:</label>
-  //     <input type="text" id={index} onChange={(e) => handleRecipeChange(e)} />
-  //   </li>
-  // );
-
-  // const handleButtonClick = (e) => {
-  //   const newFactor = factor * e.target.value;
-  //   setFactor(newFactor);
-  //   setScaledIngredients((previousIngredients) => previousIngredients.map((e) => e * newFactor));
-  // };
+  const [recipeLength, setRecipeLength] = React.useState(5);
 
   return (
     <div id="main-app">
@@ -51,11 +79,9 @@ function App(props) {
         <h2>resizer</h2>
       </div>
       <div id="directions-content" className="content">
-        <div className="content directions-content">
-          <textarea id="directions-text" />
-        </div>
+        <textarea id="directions-text" />
       </div>
-      <Recipe />
+      <Recipe factor={factor} length={recipeLength} />
       <Resizer />
     </div>
   );
