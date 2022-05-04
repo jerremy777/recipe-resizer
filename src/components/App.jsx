@@ -5,7 +5,7 @@ import React from 'react';
 // import Resizer from './Resizer';
 
 function Resizer(props) {
-  const { updateFactor, double } = props;
+  const { updateFactor, multiplyFactor } = props;
   const [slideValue, setSlideValue] = React.useState(20);
   // on click enter of the slider I want to freeze the amounts values
 
@@ -40,9 +40,17 @@ function Resizer(props) {
       <div id="resizer-options">
         <button
           type="button"
-          id="reset-button"
+          id="half-button"
           className="option-button"
-          onClick={() => double()}
+          onClick={() => multiplyFactor(0.5)}
+        >
+          half
+        </button>
+        <button
+          type="button"
+          id="double-button"
+          className="option-button"
+          onClick={() => multiplyFactor(2)}
         >
           double
         </button>
@@ -64,18 +72,48 @@ function Resizer(props) {
 }
 
 function RecipeItem(props) {
-  const { scaledAmount, item, updateAmount } = props;
+  // Set original_amounts on input change
+  // set displayed_amounts on scale/factor change
+  const {
+    scaledAmount,
+    item,
+    updateAmount,
+    updateRecipe,
+  } = props;
   const [amount, setAmount] = React.useState(scaledAmount);
-  // ingredient = {ingredient: , amount: }
+  const [recipeItem, setRecipeItem] = React.useState({ ingredient: '', amount: '', unit: 'grams' });
+
+  const handleIngredientChange = (e) => {
+    recipeItem[e.target.name] = e.target.value;
+    console.log('[STATE] Update recipe item', item, recipeItem);
+    setRecipeItem(recipeItem);
+    updateRecipe(item, recipeItem);
+  };
 
   const handleAmountChange = (e) => {
     setAmount(e.target.value);
     // Update the amount in App state:
     updateAmount(item, e.target.value);
+    handleIngredientChange(e);
   };
 
   React.useEffect(() => {
+    // update local state:
     setAmount(scaledAmount);
+    // update the recipe item:
+    recipeItem.amount = scaledAmount;
+    setRecipeItem(recipeItem);
+
+    // update the App state Recipe:
+    // updateRecipe(item, recipeItem);
+
+    // The mechanics here are a little funky:
+    // Resizer component updates the factor app state which triggers a change to
+    // the amounts app state
+    // which triggers this use effect to fire, which causes the recipe item to update
+    // and also sends another update to the recipe state in app
+    // Can we just make it so that changing the factor (state) results in
+    // recipe (state) items getting their amounts recalculated at the App level?
   }, [scaledAmount]);
 
   return (
@@ -83,15 +121,16 @@ function RecipeItem(props) {
       <span className="recipe-item">
         <input
           type="text"
-          name={`ingredient_${item}`}
+          name="ingredient"
           placeholder="ingredient"
           className="recipe-item ingredient-input"
+          onChange={handleIngredientChange}
         />
       </span>
       <span className="recipe-item">
         <input
           type="number"
-          name={`amount_${item}`}
+          name="amount"
           placeholder="amount"
           className="recipe-item amount-input"
           value={amount || ''}
@@ -101,12 +140,13 @@ function RecipeItem(props) {
       <span className="recipe-item">
         <input
           type="text"
-          name={`unit_${item}`}
-          list="unit"
+          name="unit"
+          list="units"
           className="recipe-item unit-input"
           placeholder="unit"
+          onChange={handleIngredientChange}
         />
-        <datalist id="unit">
+        <datalist id="units">
           <option value="grams">grams</option>
           <option value="cups">cups</option>
           <option value="tbsp">tbsp</option>
@@ -118,7 +158,7 @@ function RecipeItem(props) {
 }
 
 function Recipe(props) {
-  const { amounts, updateAmount } = props;
+  const { amounts, updateAmount, updateRecipe } = props;
   return (
     <div id="recipe-content" className="content">
       {amounts.map((e, i) => (
@@ -127,6 +167,7 @@ function Recipe(props) {
           item={i}
           scaledAmount={e}
           updateAmount={updateAmount}
+          updateRecipe={updateRecipe}
         />
       ))}
     </div>
@@ -134,32 +175,37 @@ function Recipe(props) {
 }
 
 function App() {
-  // eslint-disable-next-line no-unused-vars
   const [factor, setFactor] = React.useState(1);
   // eslint-disable-next-line no-unused-vars
   const [recipeLength, setRecipeLength] = React.useState(5);
-
   // Create an array to contain the recipe amounts
   const [amounts, setAmounts] = React.useState([...Array(recipeLength)]);
+  // Create the object that will be persisted with the user data:
+  const [recipe, setRecipe] = React.useState([]);
 
   const updateAmount = (item, amount) => {
-    const newAmounts = amounts;
-    newAmounts[item] = amount;
-    console.log(newAmounts);
-    setAmounts(newAmounts);
+    amounts[item] = amount;
+    console.log('[STATE] amounts:', amounts);
+    setAmounts(amounts);
   };
 
-  const doubleAmounts = () => {
-    setFactor(factor * 2);
+  const updateRecipe = (item, ingredient) => {
+    recipe[item] = ingredient;
+    setRecipe(recipe);
+    console.log('[STATE] new recipe:', recipe);
+  };
+
+  const multiplyFactor = (multiple) => {
+    setFactor(factor * multiple);
   };
 
   const updateFactor = (value) => {
     setFactor(value);
-    console.log('new factor:', value);
+    console.log('[STATE] new factor:', value);
   };
 
   React.useEffect(() => {
-    const newAmounts = amounts.map((e) => (e ? (e * factor).toFixed(2) : e));
+    const newAmounts = amounts.map((e) => (e ? (e * factor).toFixed(1) : e));
     console.log('New amounts:', newAmounts);
     setAmounts(newAmounts);
   }, [factor]);
@@ -184,12 +230,14 @@ function App() {
         <textarea id="directions-text" />
       </div>
       <Recipe
+        recipe={recipe}
         amounts={amounts}
         updateAmount={updateAmount}
+        updateRecipe={updateRecipe}
       />
       <Resizer
         updateFactor={updateFactor}
-        double={doubleAmounts}
+        multiplyFactor={multiplyFactor}
       />
     </div>
   );
