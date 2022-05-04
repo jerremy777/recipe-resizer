@@ -34,22 +34,31 @@ function App(props) {
 
   return (
     <div id="main-app">
-      <div id="directions-headers">
-        <div className="header directions-header">
-          <h2>directions</h2>
+
+      <div id="directions-headers" className="header">
+        <h2>directions</h2>
+      </div>
+
+      <div id="recipe-headers">
+        <div id="ingredient-header" className="header">
+          <h2>ingredients</h2>
         </div>
+        <div id="amount-header" className="header">
+          <h2>amounts</h2>
+        </div>
+      </div>
+
+      <div id="resizer-headers" className="header">
+        <h2>resizer</h2>
+      </div>
+
+      <div id="directions-content">
         <div className="content directions-content">
           <textarea id="directions-text" />
         </div>
       </div>
 
-      <div id="recipe-headers">
-        <div id="ingredient-header" className="ingredient">
-          <h2>ingredients</h2>
-        </div>
-        <div id="amount-header" className="amount">
-          <h2>amounts</h2>
-        </div>
+      <div id="recipe-content">
         <div className="recipe-item ingredient">
           <input type="text" name="ingredient-1" className="recipe-item ingredient-input" />
         </div>
@@ -67,31 +76,28 @@ function App(props) {
         </div>
       </div>
 
-      <div id="resizer-headers">
-        <div className="header resizer-header">
-          <h2>resizer</h2>
-        </div>
-        <div className="content resizer-content">
-          <div className="resizer-controls">
-            <input type="range" id="resizer-input" min="0.1" max="5" />
-          </div>
-          <div className="resizer-options">
-            <button type="button" id="reset-button">
-              reset
-            </button>
-            <button type="button" id="reset-button">
-              save
-            </button>
-            <button type="button" id="reset-button">
-              load
-            </button>
-            <button type="button" id="reset-button">
-              share
-            </button>
-          </div>
 
+      <div className="content resizer-content">
+        <div className="resizer-controls">
+          <input type="range" id="resizer-input" min="0.1" max="5" />
+        </div>
+        <div className="resizer-options">
+          <button type="button" id="reset-button">
+            reset
+          </button>
+          <button type="button" id="reset-button">
+            save
+          </button>
+          <button type="button" id="reset-button">
+            load
+          </button>
+          <button type="button" id="reset-button">
+            share
+          </button>
         </div>
       </div>
+
+
     </div>
   );
 }
