@@ -1,12 +1,20 @@
+/* eslint-disable no-console */
 import React from 'react';
 // import Recipe from './Recipe';
 // import Resizer from './Resizer';
 
-function Resizer() {
+function Resizer({ updateFactor }) {
   return (
     <div id="resizer-content" className="content">
       <div id="resizer-controls">
-        <input type="range" id="resizer-input" min="10" max="40" defaultValue={25} />
+        <input
+          type="range"
+          id="resizer-input"
+          min="10"
+          max="40"
+          defaultValue={25}
+          onChange={updateFactor}
+        />
       </div>
       <div id="resizer-options">
         <button type="button" id="reset-button" className="option-button">
@@ -65,18 +73,24 @@ function RecipeItem({ num, updateRecipe }) {
   );
 }
 
-function Recipe({ factor, length, updateRecipe }) {
+function Recipe({ length, updateRecipe }) {
   return (
     <div id="recipe-content" className="content">
       {[...Array(length).keys()].map((e) => (
-        <RecipeItem key={e} num={e} updateRecipe={updateRecipe} />
+        <RecipeItem
+          key={e}
+          num={e}
+          updateRecipe={updateRecipe}
+        />
       ))}
     </div>
   );
 }
 
 function App() {
+  // eslint-disable-next-line no-unused-vars
   const [factor, setFactor] = React.useState(1);
+  // eslint-disable-next-line no-unused-vars
   const [recipeLength, setRecipeLength] = React.useState(5);
   const [recipe, setRecipe] = React.useState({});
 
@@ -84,6 +98,13 @@ function App() {
     const newRecipe = recipe;
     newRecipe[e.target.name] = e.target.value;
     setRecipe(newRecipe);
+  };
+
+  const updateFactor = (e) => {
+    e.preventDefault();
+    const newFactor = e.target.value / 20;
+    setFactor(newFactor);
+    console.log(newFactor);
   };
 
   return (
@@ -105,8 +126,11 @@ function App() {
       <div id="directions-content" className="content">
         <textarea id="directions-text" />
       </div>
-      <Recipe factor={factor} length={recipeLength} updateRecipe={updateRecipe} />
-      <Resizer />
+      <Recipe
+        updateRecipe={updateRecipe}
+        length={recipeLength}
+      />
+      <Resizer updateFactor={updateFactor} />
     </div>
   );
 }
