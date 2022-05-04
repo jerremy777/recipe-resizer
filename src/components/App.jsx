@@ -6,7 +6,24 @@ import React from 'react';
 
 function Resizer(props) {
   const { updateFactor, double } = props;
+  const [slideValue, setSlideValue] = React.useState(20);
   // on click enter of the slider I want to freeze the amounts values
+
+  const handleSliderChange = (e) => {
+    setSlideValue(e.target.value);
+  };
+
+  const handleSliderFinish = (e) => {
+    // Want to build in a delay to avoid compounding the result of slider change
+    // as well as reset slider position after change
+    console.log('drag end on:', e.target.value);
+    setTimeout(() => {
+      console.log('resetting slider');
+      updateFactor(e.target.value / 20);
+      setSlideValue(20);
+    }, 250);
+  };
+
   return (
     <div id="resizer-content" className="content">
       <div id="resizer-controls">
@@ -14,9 +31,10 @@ function Resizer(props) {
           type="range"
           id="resizer-input"
           min="10"
-          max="40"
-          defaultValue={20}
-          onChange={updateFactor}
+          max="30"
+          value={slideValue}
+          onChange={handleSliderChange}
+          onMouseUp={handleSliderFinish}
         />
       </div>
       <div id="resizer-options">
@@ -26,6 +44,9 @@ function Resizer(props) {
           className="option-button"
           onClick={() => double()}
         >
+          double
+        </button>
+        <button type="button" id="reset-button" className="option-button">
           reset
         </button>
         <button type="button" id="save-button" className="option-button">
@@ -132,11 +153,9 @@ function App() {
     setFactor(factor * 2);
   };
 
-  const updateFactor = (e) => {
-    e.preventDefault();
-    const newFactor = e.target.value / 20;
-    setFactor(newFactor);
-    console.log(newFactor);
+  const updateFactor = (value) => {
+    setFactor(value);
+    console.log('new factor:', value);
   };
 
   React.useEffect(() => {
