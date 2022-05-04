@@ -1,9 +1,12 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable no-console */
 import React from 'react';
 // import Recipe from './Recipe';
 // import Resizer from './Resizer';
 
-function Resizer({ updateFactor }) {
+function Resizer(props) {
+  const { updateFactor, double } = props;
+  // on click enter of the slider I want to freeze the amounts values
   return (
     <div id="resizer-content" className="content">
       <div id="resizer-controls">
@@ -12,12 +15,17 @@ function Resizer({ updateFactor }) {
           id="resizer-input"
           min="10"
           max="40"
-          defaultValue={25}
+          defaultValue={20}
           onChange={updateFactor}
         />
       </div>
       <div id="resizer-options">
-        <button type="button" id="reset-button" className="option-button">
+        <button
+          type="button"
+          id="reset-button"
+          className="option-button"
+          onClick={() => double()}
+        >
           reset
         </button>
         <button type="button" id="save-button" className="option-button">
@@ -34,13 +42,27 @@ function Resizer({ updateFactor }) {
   );
 }
 
-function RecipeItem({ num, updateRecipe }) {
+function RecipeItem(props) {
+  const { scaledAmount, item, updateAmount } = props;
+  const [amount, setAmount] = React.useState(scaledAmount);
+  // ingredient = {ingredient: , amount: }
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
+    // Update the amount in App state:
+    updateAmount(item, e.target.value);
+  };
+
+  React.useEffect(() => {
+    setAmount(scaledAmount);
+  }, [scaledAmount]);
+
   return (
     <div className="recipe-items">
       <span className="recipe-item">
         <input
           type="text"
-          name={`ingredient_${num}`}
+          name={`ingredient_${item}`}
           placeholder="ingredient"
           className="recipe-item ingredient-input"
         />
@@ -48,16 +70,17 @@ function RecipeItem({ num, updateRecipe }) {
       <span className="recipe-item">
         <input
           type="number"
-          name={`amount_${num}`}
+          name={`amount_${item}`}
           placeholder="amount"
           className="recipe-item amount-input"
-          onChange={updateRecipe}
+          value={amount || ''}
+          onChange={handleAmountChange}
         />
       </span>
       <span className="recipe-item">
         <input
           type="text"
-          name={`unit_${num}`}
+          name={`unit_${item}`}
           list="unit"
           className="recipe-item unit-input"
           placeholder="unit"
@@ -73,14 +96,16 @@ function RecipeItem({ num, updateRecipe }) {
   );
 }
 
-function Recipe({ length, updateRecipe }) {
+function Recipe(props) {
+  const { amounts, updateAmount } = props;
   return (
     <div id="recipe-content" className="content">
-      {[...Array(length).keys()].map((e) => (
+      {amounts.map((e, i) => (
         <RecipeItem
-          key={e}
-          num={e}
-          updateRecipe={updateRecipe}
+          key={i}
+          item={i}
+          scaledAmount={e}
+          updateAmount={updateAmount}
         />
       ))}
     </div>
@@ -92,12 +117,19 @@ function App() {
   const [factor, setFactor] = React.useState(1);
   // eslint-disable-next-line no-unused-vars
   const [recipeLength, setRecipeLength] = React.useState(5);
-  const [recipe, setRecipe] = React.useState({});
 
-  const updateRecipe = (e) => {
-    const newRecipe = recipe;
-    newRecipe[e.target.name] = e.target.value;
-    setRecipe(newRecipe);
+  // Create an array to contain the recipe amounts
+  const [amounts, setAmounts] = React.useState([...Array(recipeLength)]);
+
+  const updateAmount = (item, amount) => {
+    const newAmounts = amounts;
+    newAmounts[item] = amount;
+    console.log(newAmounts);
+    setAmounts(newAmounts);
+  };
+
+  const doubleAmounts = () => {
+    setFactor(factor * 2);
   };
 
   const updateFactor = (e) => {
@@ -106,6 +138,12 @@ function App() {
     setFactor(newFactor);
     console.log(newFactor);
   };
+
+  React.useEffect(() => {
+    const newAmounts = amounts.map((e) => (e ? e * factor : e));
+    console.log('New amounts:', newAmounts);
+    setAmounts(newAmounts);
+  }, [factor]);
 
   return (
     <div id="main-app">
@@ -117,7 +155,7 @@ function App() {
           <h2>ingredients</h2>
         </div>
         <div id="amount-header" className="header">
-          <h2>amounts</h2>
+          <h2>amount</h2>
         </div>
       </div>
       <div id="resizer-headers" className="header">
@@ -127,10 +165,13 @@ function App() {
         <textarea id="directions-text" />
       </div>
       <Recipe
-        updateRecipe={updateRecipe}
-        length={recipeLength}
+        amounts={amounts}
+        updateAmount={updateAmount}
       />
-      <Resizer updateFactor={updateFactor} />
+      <Resizer
+        updateFactor={updateFactor}
+        double={doubleAmounts}
+      />
     </div>
   );
 }
