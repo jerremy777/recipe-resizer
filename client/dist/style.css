@@ -5,7 +5,7 @@ body {
 
 div#main-app {
   display: grid;
-  grid-template-columns: 30% 45% auto;
+  grid-template-columns: 30% 50% 20%;
   grid-template-areas:
     "directions recipe resizer";
   width: 80%;
@@ -22,7 +22,11 @@ div.header {
 div#directions-content {
   display: flex;
   justify-content: center;
-  padding: 5px;
+  padding-left: 10%;
+}
+
+textarea#directions-text {
+  resize: none;
 }
 
 /* --- recipe --- */
@@ -69,18 +73,32 @@ input.recipe-item {
 
 div#resizer-content {
   display: flex;
-  grid-template-columns: 1fr 1fr;
+  justify-content: flex-start;
+  padding-right: 10%;
+}
+
+div#resizer-controls {
+  display: flex;
+  aspect-ratio: 1/1;
+  height: 50%;
+  transform: rotate(-90deg);
 }
 
 input#resizer-input {
   position: relative;
-  transform: rotate(-90deg);
-  top: 40%;
+  transform: translateX(-50%) scale(1.5);
+  width: 100%;
 }
 
 div#resizer-options {
   display: flex;
   flex-flow: column;
   padding: 5px;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  width: 50%;
+}
+
+button.option-button {
+  font-size: x-small;
+  line-height: 1.4em;
 }
