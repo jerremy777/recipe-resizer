@@ -10,12 +10,26 @@ div#main-app {
     "directions recipe resizer";
   width: 80%;
   margin: auto;
-  padding: 2em 0;
+  padding: 1.5em 0;
   background-color: rgb(237, 237, 237);
 }
 
 div.header {
+  display: flex;
+  justify-content: center;
   text-align: center;
+  background-color: rgb(199, 199, 199);
+  justify-self: center;
+  align-self: center;
+  height: 80%;
+  width: 95%;
+}
+
+div.header > h2 {
+  /* top needs to be smaller because the bottom
+  of the text overflows. this is the size that
+  sets the hieght of the grid (two levels up) */
+  margin: 0.3em auto 0.7em auto;
 }
 
 /* --- directions --- */
