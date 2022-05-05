@@ -1,11 +1,12 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-console */
 import React from 'react';
+import axios from 'axios';
 // import Recipe from './Recipe';
 // import Resizer from './Resizer';
 
 function Resizer(props) {
-  const { updateFactor, multiplyFactor } = props;
+  const { updateFactor, multiplyFactor, save } = props;
   const [slideValue, setSlideValue] = React.useState(20);
   // on click enter of the slider I want to freeze the amounts values
 
@@ -22,6 +23,12 @@ function Resizer(props) {
       updateFactor(e.target.value / 20);
       setSlideValue(20);
     }, 250);
+  };
+
+  const handleSaveClick = () => {
+    // eslint-disable-next-line no-alert
+    const recipeName = window.prompt('enter a name:');
+    save(recipeName);
   };
 
   return (
@@ -57,7 +64,12 @@ function Resizer(props) {
         <button type="button" id="reset-button" className="option-button">
           reset
         </button>
-        <button type="button" id="save-button" className="option-button">
+        <button
+          type="button"
+          id="save-button"
+          className="option-button"
+          onClick={() => { handleSaveClick(); }}
+        >
           save
         </button>
         <button type="button" id="load-button" className="option-button">
@@ -182,6 +194,7 @@ function App() {
   const [amounts, setAmounts] = React.useState([...Array(recipeLength)]);
   // Create the object that will be persisted with the user data:
   const [recipe, setRecipe] = React.useState([]);
+  const [directions, setDirections] = React.useState('');
 
   const updateAmount = (item, amount) => {
     amounts[item] = amount;
@@ -202,6 +215,22 @@ function App() {
   const updateFactor = (value) => {
     setFactor(value);
     console.log('[STATE] new factor:', value);
+  };
+
+  const saveRecipe = (name) => {
+    const payload = { name, recipe, directions };
+    console.log('Saving recipe:', payload);
+    axios.post('/recipe', payload)
+      .then((response) => {
+        console.log('Response data:', response.data);
+      })
+      .catch((err) => {
+        console.log('Error posting:', err);
+      });
+  };
+
+  const handleTextChange = (e) => {
+    setDirections(e.target.value);
   };
 
   React.useEffect(() => {
@@ -227,7 +256,7 @@ function App() {
         <h2>resizer</h2>
       </div>
       <div id="directions-content" className="content">
-        <textarea id="directions-text" />
+        <textarea id="directions-text" onChange={handleTextChange} />
       </div>
       <Recipe
         recipe={recipe}
@@ -238,6 +267,7 @@ function App() {
       <Resizer
         updateFactor={updateFactor}
         multiplyFactor={multiplyFactor}
+        save={saveRecipe}
       />
     </div>
   );
