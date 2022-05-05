@@ -9,13 +9,15 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
-app.use(cookieParser('Pizza'));
+app.use(cookieParser());
 app.use(sessionHandler);
-app.use(express.static('dist'));
+app.use(express.static('client/dist'));
 
 app.post('/recipe', (req, res) => {
-  console.log('Incoming recipe:', req.body);
-  db.findRecipeAndUpdate(req.body)
+  const recipe = req.body;
+  recipe.cookie = req.cookies['recipe-resizer'];
+  console.log('saving recipe:', recipe);
+  db.findRecipeAndUpdate(recipe)
     .then((result) => {
       console.log('\nSaved:\n', result);
       res.send('done');
