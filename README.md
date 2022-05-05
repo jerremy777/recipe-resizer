@@ -1,3 +1,4 @@
 # recipe-resizer
-Easily scale the units of a recipe; recipe scale-up; recipe scale-down
+Easily multiply or divide all of the ingredients of a recipe at once!
+
 ![Demo](demo/resizer-demo.gif)
