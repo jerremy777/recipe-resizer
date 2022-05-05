@@ -1,6 +1,11 @@
-const db = require('./db').Recipe;
+const db = require('./db');
+
+module.exports.findUserByCookie = (cookie) => {
+  const filter = { cookie };
+  return db.findOne(cookie);
+};
 
 module.exports.findRecipeAndUpdate = (recipe) => {
-  const filter = recipe.name;
+  const filter = { name: recipe.name };
   return db.findOneAndUpdate(filter, recipe, { upsert: true });
 };

@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 const { v4: uuid } = require('uuid');
-const db = require('./db').User;
+const db = require('./models');
+
+// Upon joining a new recipe/user is created
 
 module.exports = (req, res, next) => {
   if (!req.cookies['recipe-resizer']) {
