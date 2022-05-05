@@ -6,7 +6,7 @@ resume/
 
 .cache/
 coverage/
-dist/*
+client/dist/*
 !dist/style.css
 !dist/index.html
 

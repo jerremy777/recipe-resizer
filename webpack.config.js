@@ -3,11 +3,11 @@ const webpack = require('webpack');
 const path = require('path');
 
 const config = {
-  entry: './src/index.jsx',
+  entry: './client/src/index.jsx',
   mode: 'development',
   resolve: { extensions: ['*', '.js', '.jsx'] },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'client/dist'),
     filename: 'bundle.js',
   },
   devtool: 'cheap-module-source-map',
