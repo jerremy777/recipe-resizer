@@ -21,6 +21,15 @@ const recipeSchema = new mongoose.Schema({
   directions: String,
 });
 
+const userSchema = new mongoose.Schema({
+  cookie: String,
+  username: String,
+  password: String,
+});
+
 const Recipe = mongoose.model('Recipe', recipeSchema);
 
-module.exports = Recipe;
+const User = mongoose.model('User', userSchema);
+
+module.exports.Recipe = Recipe;
+module.exports.User = User;
